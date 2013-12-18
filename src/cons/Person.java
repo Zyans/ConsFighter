@@ -15,7 +15,7 @@ class Person {
 	public int stepX; 					// Bruchteil des Schrittes der X-Position
 	public int stepY; 					// Bruchteil des Schrittes der Y-Position
 	private int turnBack = 5; 			// Richtung, in die sich Personen nach dem Ansprechen drehen
-	static Fighter fighter;
+	private Fighter fighter;
 	
 	
 	Person(Map place, int xPos, int yPos, String text, PersonType personType, Main main)
@@ -87,6 +87,7 @@ class Person {
 		else
 		{
 			main.setInBattle(true);
+			main.getPlayer().setEnemy(fighter);
 			main.drawBattle(main.getPlayer().fighter, fighter, "\"Lass uns kämpfen!\"");
 		}
 	}

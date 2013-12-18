@@ -91,7 +91,7 @@ public class Main extends JFrame
 			{
 				e.getComponent().requestFocusInWindow();
 				if(inBattle){
-					calculateSelectedAttack(getPlayer().fighter, Person.fighter, e);
+					calculateSelectedAttack(getPlayer().fighter, getPlayer().getEnemy(), e);
 				}
 			}
 			public void mouseEntered(final MouseEvent e)
@@ -715,7 +715,16 @@ public class Main extends JFrame
 		{
 			drawAttackButtons(g);
 			g.setColor(Color.green);
-			g.fillRect(473, 413, 119, 119);
+			// === Attackenbeschreibungen ===
+			/*if(playerFighter.getAttacks()[0] != null) // Falls SpielerFighter eine Attacke im ersten Slot hat
+				g.drawString(playerFighter.getAttacks()[0].getAttackType().getName(), 355, 305); // Attackenbeschreibung 1
+			if(playerFighter.getAttacks()[1] != null) // Falls SpielerFighter eine Attacke im zweiten Slot hat
+				g.drawString(playerFighter.getAttacks()[1].getAttackType().getName(), 355, 433); // Attackenbeschreibung 2
+			if(playerFighter.getAttacks()[2] != null) // Falls SpielerFighter eine Attacke im dritten Slot hat
+				g.drawString(playerFighter.getAttacks()[2].getAttackType().getName(), 483, 305); // Attackenbeschreibung 3
+			if(playerFighter.getAttacks()[3] != null) // Falls SpielerFighter eine Attacke im vierten Slot hat
+				g.drawString(playerFighter.getAttacks()[3].getAttackType().getName(), 483, 433); // Attackenbeschreibung 4
+			g.fillRect(473, 413, 119, 119);*/
 			activeAttack = playerFighter.getAttacks()[3];
 		}
 		
@@ -735,11 +744,11 @@ public class Main extends JFrame
 		// Pause, damit der Spieler die grüne, ausgewählte Attacke sieht
 		try
 		{
-			Thread.sleep(500);
+			Thread.sleep(200);
 		}
-		catch (InterruptedException te)
+		catch (InterruptedException ie)
 		{
-			te.printStackTrace();
+			ie.printStackTrace();
 		}
 		
 		// Falls der Gegner noch nicht tot ist, wird die grüne ausgewählte Attacke wieder normal
@@ -852,7 +861,8 @@ public class Main extends JFrame
 		return inBattle;
 	}
 
-	void setInBattle(boolean inBattle1) {
-		this.inBattle = inBattle1;
+	void setInBattle(boolean inBattle) {
+		this.inBattle = inBattle;
+		setWalkingEnabled(!inBattle);
 	}
 }

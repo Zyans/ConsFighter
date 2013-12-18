@@ -17,7 +17,8 @@ class Player {
 	int stepX; 						// Bruchteil des Schrittes der X-Position
 	int stepY; 						// Bruchteil des Schrittes der Y-Position
 	Map place; 						// Map, auf der sich der Spieler befindet
-	Fighter fighter;
+	Fighter fighter;                // er slebst im Kampf
+	Fighter enemy;                  //Gegner im Kmapf
 	int mapId;
 	
 	
@@ -207,4 +208,13 @@ class Player {
 		else
 			return img[lookDirection * 3 + 2];
 	}
+
+	public Fighter getEnemy() {
+		return enemy;
+	}
+
+	public void setEnemy(Fighter enemy) {
+		this.enemy = enemy;
+	}
+	
 }
