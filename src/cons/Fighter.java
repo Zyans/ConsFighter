@@ -50,7 +50,7 @@ class Fighter
 				if(fighter.getBattleHealth() <= 0 || getBattleHealth() <= 0)
 				{
 					information = "Kampf beendet";
-					main.setInBattle(false);
+					main.setInBattle(false, this);
 					main.setWalkingEnabled(true);
 				}
 			}

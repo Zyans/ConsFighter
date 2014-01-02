@@ -12,23 +12,23 @@ import javax.sound.sampled.FloatControl;
 
 class SoundPlayer implements Serializable
 {
-	transient Clip clip;
+	Clip clip;
 	static double volume = 0;
 	String path;
 
-	static SoundPlayer soundBeep = new SoundPlayer("src/sounds/beep.wav");
-	static SoundPlayer soundDoorOpen = new SoundPlayer("src/sounds/door_open.wav");
-	static SoundPlayer soundDoorClose = new SoundPlayer("src/sounds/door_close.wav");
-	static SoundPlayer soundBackground = new SoundPlayer("src/sounds/background.wav");
-	static SoundPlayer soundStairs = new SoundPlayer("src/sounds/stairs.wav");
-	static SoundPlayer soundMenu = new SoundPlayer("src/sounds/menu.wav");
-	static SoundPlayer soundCity1 = new SoundPlayer("src/sounds/city1.wav"); // Wissenschaftlerstadt
-	static SoundPlayer soundCity2 = new SoundPlayer("src/sounds/city2.wav"); // lebensfrohe Stadt
-	static SoundPlayer soundCity3 = new SoundPlayer("src/sounds/city3.wav"); // Anfangsstadt
+	static SoundPlayer soundBeep = new SoundPlayer("sounds/beep.wav");
+	static SoundPlayer soundDoorOpen = new SoundPlayer("sounds/door_open.wav");
+	static SoundPlayer soundDoorClose = new SoundPlayer("sounds/door_close.wav");
+	static SoundPlayer soundBackground = new SoundPlayer("sounds/background.wav");
+	static SoundPlayer soundStairs = new SoundPlayer("sounds/stairs.wav");
+	static SoundPlayer soundMenu = new SoundPlayer("sounds/menu.wav");
+	static SoundPlayer soundCity1 = new SoundPlayer("sounds/city1.wav"); // Wissenschaftlerstadt
+	static SoundPlayer soundCity2 = new SoundPlayer("sounds/city2.wav"); // lebensfrohe Stadt
+	static SoundPlayer soundCity3 = new SoundPlayer("sounds/city3.wav"); // Anfangsstadt
 	
-	public SoundPlayer(String parPath)
+	public SoundPlayer(String path)
 	{
-		path = parPath;
+		this.path = path;
 	}
 	
 	public static void setVolume(double parVolume)

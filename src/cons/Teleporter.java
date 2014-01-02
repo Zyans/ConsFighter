@@ -45,17 +45,17 @@ public class Teleporter extends Field
 		if(!isActive)
 			return;
 		
-		doIdSpecificActionsBeforeTeleport();
+		doIDSpecificActionsBeforeTeleport();
 		teleport();
 		
 		main.getPlayer().place.drawImage(main);
-		main.drawMap();
+		main.drawMap(null);
 		
 		doIdSpecificActionsAfterTeleport();	
 	}
 
 
-	private void doIdSpecificActionsBeforeTeleport() {
+	private void doIDSpecificActionsBeforeTeleport() {
 		if(id == 1 || id == 2)
 			SoundPlayer.soundDoorClose.play();
 		if(id == 3 || id == 4)
@@ -97,7 +97,7 @@ public class Teleporter extends Field
 			main.getPlayer().walkOnY(1);
 			t0.setImage("houses/house3/b2.png");
 			main.getPlayer().place.drawImage1(main);
-			main.drawMap();
+			main.drawMap(null);
 			t0.setCanGoThrough(false);
 		}
 		if(id == 4)
@@ -124,7 +124,7 @@ public class Teleporter extends Field
 			SoundPlayer.soundDoorOpen.play();
 			setImage("door_open.png");
 			main.getPlayer().place.drawImage1(main);
-			main.drawMap();
+			main.drawMap(null);
 			isActive = true;
 			setCanGoThrough(isActive);
 			try {

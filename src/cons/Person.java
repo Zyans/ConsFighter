@@ -15,7 +15,7 @@ class Person {
 	public int stepX; 					// Bruchteil des Schrittes der X-Position
 	public int stepY; 					// Bruchteil des Schrittes der Y-Position
 	private int turnBack = 5; 			// Richtung, in die sich Personen nach dem Ansprechen drehen
-	private Fighter fighter;
+	Fighter fighter;
 	
 	
 	Person(Map place, int xPos, int yPos, String text, PersonType personType, Main main)
@@ -27,7 +27,8 @@ class Person {
 		this.main = main;
 		this.personType = personType;
 		
-		place.addPerson(this);
+		if(place != null)
+			place.addPerson(this);
 		dialogNr = 0;
 	}
 	
@@ -69,7 +70,7 @@ class Person {
 			{
 				this.direction = direction;
 				place.drawImageP(main);
-				main.drawMap();
+				main.drawMap(null);
 				main.printDialog(text);
 				main.setWalkingEnabled(false);
 			}
@@ -81,13 +82,12 @@ class Person {
 					place.drawImageP(main);
 				}
 				main.setWalkingEnabled(true);
-				main.drawMap();
+				main.drawMap(null);
 			}
 		}
 		else
 		{
-			main.setInBattle(true);
-			main.getPlayer().setEnemy(fighter);
+			main.setInBattle(true, this.fighter);
 			main.drawBattle(main.getPlayer().fighter, fighter, "\"Lass uns kämpfen!\"");
 		}
 	}
@@ -104,14 +104,14 @@ class Person {
 		        	for(stepX = 0; stepX > -16; stepX--)
 		        	{
 		        		place.drawImageP(main);
-		        		main.drawMap();
+		        		main.drawMap(null);
 		        	}
 		        	stepX = 0;
 			    	xPos++;
 		    		place.getPersons()[xPos-1][yPos] = null;
 		    		place.getPersons()[xPos][yPos] = this;
 	        		place.drawImageP(main);
-	        		main.drawMap();
+	        		main.drawMap(null);
 		    	}
 		    }
 		}
@@ -125,14 +125,14 @@ class Person {
 		        	for(stepX = 0; stepX < 16; stepX++)
 		        	{
 		        		place.drawImageP(main);
-		        		main.drawMap();
+		        		main.drawMap(null);
 		        	}
 		        	stepX = 0;
 			    	xPos--;
 		    		place.getPersons()[xPos+1][yPos] = null;
 		    		place.getPersons()[xPos][yPos] = this;
 	        		place.drawImageP(main);
-	        		main.drawMap();
+	        		main.drawMap(null);
 		    	}
 		    }
 		}
@@ -150,14 +150,14 @@ class Person {
 		        	for(stepY = 0; stepY > -16; stepY--)
 		        	{
 		        		place.drawImageP(main);
-		        		main.drawMap();
+		        		main.drawMap(null);
 		        	}
 		        	stepY = 0;
 			    	yPos++;
 		    		place.getPersons()[xPos][yPos-1] = null;
 		    		place.getPersons()[xPos][yPos] = this;
 	        		place.drawImageP(main);
-	        		main.drawMap();
+	        		main.drawMap(null);
 		    	}
 			}
 		}
@@ -171,14 +171,14 @@ class Person {
 		        	for(stepY = 0; stepY < 16; stepY++)
 		        	{
 		        		place.drawImageP(main);
-		        		main.drawMap();
+		        		main.drawMap(null);
 		        	}
 		        	stepY = 0;
 			    	yPos--;
 		    		place.getPersons()[xPos][yPos+1] = null;
 		    		place.getPersons()[xPos][yPos] = this;
 	        		place.drawImageP(main);
-	        		main.drawMap();
+	        		main.drawMap(null);
 		    	}
 		    }
 		}

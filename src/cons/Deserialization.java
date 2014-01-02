@@ -63,7 +63,7 @@ class Deserialization {
 			}
 			
 			main.getPlayer().place.drawImage(main);
-			main.drawMap();
+			main.drawMap(null);
 			main.drawMenu();
 			ois.close();
 			System.out.println("Deserialisierung erfolgreich!");

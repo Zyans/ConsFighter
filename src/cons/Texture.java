@@ -9,7 +9,7 @@ class Texture {
 	
 	Image image;
 	final String path;
-	static final String HOME_DIRECTORY = "src/imgs/textures/";
+	static final String HOME_DIRECTORY = "imgs/textures/";
 	
 	Texture(String path) {
 		this.path = path;

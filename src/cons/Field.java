@@ -17,7 +17,7 @@ class Field {
 	
 	private static Main main;
 	
-	private static final String FIELDS_HOME_DIRECTORY = "src/imgs/fields/";
+	private static final String FIELDS_HOME_DIRECTORY = "imgs/fields/";
 	static final Texture TEXTURE = new Texture("texture.png");
 
 	// === Boden ===
@@ -32,7 +32,9 @@ class Field {
 	// === Editor Felder === (Werden im Menue des Editors angezeigt,werden aber nicht direkt verwendet)
 	
 	static final Field eFence = new Field("fences/fence1/tb.png", true);
+	
 	static final Field eTrail = new Field("trails/trail3/tl.png", true);
+	static final Field eHouse = House.house1.getB()[0];
 	
 	// === Sammlungen ===
 	
@@ -275,18 +277,18 @@ class Field {
 		
 		SoundPlayer.soundBeep.play();
 		this.switchDialogNr();
-		main.drawMap();
+		main.drawMap(null);
 		
 		if(dialogNr == 1)
 		{
-			main.drawMap();
+			main.drawMap(null);
 			main.printMonolog(message);
 			main.setWalkingEnabled(false);
 		}
 		else
 		{
 			main.setWalkingEnabled(true);
-			main.drawMap();
+			main.drawMap(null);
 		}
 	}
 	

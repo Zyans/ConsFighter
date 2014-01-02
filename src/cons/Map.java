@@ -303,7 +303,7 @@ public class Map
 				g3.drawLine(200, 200 + y * 16, width * 16 + 200, 200 + y * 16);
 		}
 		
-		main.drawMap();
+		main.drawMap(null);
 	}
 	
 	void drawImage1(Main main)

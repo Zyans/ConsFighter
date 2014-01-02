@@ -51,7 +51,7 @@ class PersonType
 		
 		for(int i = 0; i < type.length; i++)
 		{
-			type[i] = new PersonType("src/imgs/persons/person" + (i+1) + "/");
+			type[i] = new PersonType("imgs/persons/person" + (i+1) + "/");
 		}
 	}
 

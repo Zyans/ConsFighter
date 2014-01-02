@@ -17,8 +17,7 @@ class Player {
 	int stepX; 						// Bruchteil des Schrittes der X-Position
 	int stepY; 						// Bruchteil des Schrittes der Y-Position
 	Map place; 						// Map, auf der sich der Spieler befindet
-	Fighter fighter;                // er slebst im Kampf
-	Fighter enemy;                  //Gegner im Kmapf
+	Fighter fighter;
 	int mapId;
 	
 	
@@ -95,11 +94,15 @@ class Player {
 				    {
 			        	for(stepX = 0; stepX > -16; stepX--)
 			        	{
-			        		main.drawMap();
+			        		main.drawMap(null);
 			        	}
 			        	stepX = 0;
 				    	xPos++;
 				    	field[0].onWalkOn();
+				    	if(field[1] != null)
+				    		field[1].onWalkOn();
+				    	if(field[2] != null)
+				    		field[2].onWalkOn();
 				    }
 				}
 			}
@@ -113,15 +116,19 @@ class Player {
 					{
 			        	for(stepX = 0; stepX < 16; stepX++)
 			        	{
-			        		main.drawMap();
+			        		main.drawMap(null);
 			        	}
 			        	stepX = 0;
 				    	xPos--;
 				    	field[0].onWalkOn();
+				    	if(field[1] != null)
+				    		field[1].onWalkOn();
+				    	if(field[2] != null)
+				    		field[2].onWalkOn();
 				    }
 				}
 			}
-	       	main.drawMap();
+	       	main.drawMap(null);
 		}
 	}
 	
@@ -140,11 +147,15 @@ class Player {
 					{
 			        	for(stepY = 0; stepY > -16; stepY--)
 			        	{
-			        		main.drawMap();
+			        		main.drawMap(null);
 			        	}
 			        	stepY = 0;
 				    	yPos++;
 				    	field[0].onWalkOn();
+				    	if(field[1] != null)
+				    		field[1].onWalkOn();
+				    	if(field[2] != null)
+				    		field[2].onWalkOn();
 				    }
 				}
 			}
@@ -158,15 +169,19 @@ class Player {
 					{
 			        	for(stepY = 0; stepY < 16; stepY++)
 			        	{
-			        		main.drawMap();
+			        		main.drawMap(null);
 			        	}
 			        	stepY = 0;
 				    	yPos--;
 				    	field[0].onWalkOn();
+				    	if(field[1] != null)
+				    		field[1].onWalkOn();
+				    	if(field[2] != null)
+				    		field[2].onWalkOn();
 				    }
 				}
 			}
-	       	main.drawMap();
+	       	main.drawMap(null);
 		}
 	}
 	
@@ -174,21 +189,22 @@ class Player {
 	void load()
 	{
 		int nr = 7;
+		String path = "imgs/persons/person" + nr;
 		
 		try
 		{
-			img[0] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/t1.png"));
-			img[1] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/t2.png"));
-			img[2] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/t3.png"));
-			img[3] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/r1.png"));
-			img[4] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/r2.png"));
-			img[5] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/r3.png"));
-			img[6] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/b1.png"));
-			img[7] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/b2.png"));
-			img[8] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/b3.png"));
-			img[9] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/l1.png"));
-			img[10] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/l2.png"));
-			img[11] = ImageIO.read(new File("src/imgs/persons/person" + nr + "/l3.png"));
+			img[0] = ImageIO.read(new File(path + "/t1.png"));
+			img[1] = ImageIO.read(new File(path + "/t2.png"));
+			img[2] = ImageIO.read(new File(path + "/t3.png"));
+			img[3] = ImageIO.read(new File(path + "/r1.png"));
+			img[4] = ImageIO.read(new File(path + "/r2.png"));
+			img[5] = ImageIO.read(new File(path + "/r3.png"));
+			img[6] = ImageIO.read(new File(path + "/b1.png"));
+			img[7] = ImageIO.read(new File(path + "/b2.png"));
+			img[8] = ImageIO.read(new File(path + "/b3.png"));
+			img[9] = ImageIO.read(new File(path + "/l1.png"));
+			img[10] = ImageIO.read(new File(path + "/l2.png"));
+			img[11] = ImageIO.read(new File(path + "/l3.png"));
 		}
 		catch (IOException e)
 		{
@@ -208,13 +224,4 @@ class Player {
 		else
 			return img[lookDirection * 3 + 2];
 	}
-
-	public Fighter getEnemy() {
-		return enemy;
-	}
-
-	public void setEnemy(Fighter enemy) {
-		this.enemy = enemy;
-	}
-	
 }

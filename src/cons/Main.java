@@ -1,11 +1,6 @@
 package cons;
 
-import static java.awt.event.KeyEvent.VK_DOWN;
-import static java.awt.event.KeyEvent.VK_ENTER;
-import static java.awt.event.KeyEvent.VK_ESCAPE;
-import static java.awt.event.KeyEvent.VK_LEFT;
-import static java.awt.event.KeyEvent.VK_RIGHT;
-import static java.awt.event.KeyEvent.VK_UP;
+import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -19,6 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -46,10 +43,10 @@ public class Main extends JFrame
 	int menuChoice = 0;
 	private final int VK_SPACE = 32;
 	// === Hauptmenü-Komponenten ===
-	private final JButton buttonStart = new JButton("Start", new ImageIcon("src/imgs/menu/button_start.png"));
-	private final JButton buttonHelp = new JButton("Help", new ImageIcon("src/imgs/menu/button_help.png"));
-	private final JButton buttonCredits = new JButton("Credits", new ImageIcon("src/imgs/menu/button_credits.png"));
-	private final JButton buttonWebsite = new JButton("Website", new ImageIcon("src/imgs/menu/button_website.png"));
+	private final JButton buttonStart = new JButton("Start", new ImageIcon("imgs/menu/button_start.png"));
+	private final JButton buttonHelp = new JButton("Help", new ImageIcon("imgs/menu/button_help.png"));
+	private final JButton buttonCredits = new JButton("Credits", new ImageIcon("imgs/menu/button_credits.png"));
+	private final JButton buttonWebsite = new JButton("Website", new ImageIcon("imgs/menu/button_website.png"));
 	private final JLabel background = new JLabel();
 	private final JLabel headline = new JLabel("ConsFighter");
 	public final JPanel screen = new JPanel();
@@ -63,6 +60,7 @@ public class Main extends JFrame
 	double zoom = 1;
 
 	private Attack activeAttack;
+	private Fighter enemy;
 	
 	public static void main(String args[]) {
 		new Main();
@@ -76,6 +74,7 @@ public class Main extends JFrame
 	public void init()
 	{
 		// Menü-Theme spielen
+		SoundPlayer.setVolume(0);
 		SoundPlayer.soundMenu.play();
 
 		// Panel-Eigenschaften setzen
@@ -91,12 +90,23 @@ public class Main extends JFrame
 			{
 				e.getComponent().requestFocusInWindow();
 				if(inBattle){
-					calculateSelectedAttack(getPlayer().fighter, getPlayer().getEnemy(), e);
+					calculateSelectedAttack(getPlayer().fighter, enemy, e);
 				}
 			}
 			public void mouseEntered(final MouseEvent e)
 			{
 				e.getComponent().requestFocusInWindow();
+			}
+		};
+		
+		MouseWheelListener MOUSELWHEELLISTENER = new MouseAdapter(){
+			public void mouseWheelMoved(MouseWheelEvent e){
+				if(e.getWheelRotation()<0){
+					zoom *= 1.1;
+				} else {
+					zoom /= 1.1;
+				}
+				drawMap(null);
 			}
 		};
 		
@@ -117,6 +127,7 @@ public class Main extends JFrame
 		
 		// Listener hinzufügen
 		panel.addMouseListener(MOUSELISTENER);
+		panel.addMouseWheelListener(MOUSELWHEELLISTENER);
 		screen.addMouseListener(MOUSELISTENER);
 		panel.addKeyListener(KEYADAPTER);
 		screen.addKeyListener(KEYADAPTER);
@@ -235,14 +246,14 @@ public class Main extends JFrame
 		if(startScreenDisplayed) // im Startmenü?
 		{
 			// Hintergrundbild aktualisieren
-			final ImageIcon backgroundIcon = new ImageIcon("src/imgs/menu/background.jpg");
+			final ImageIcon backgroundIcon = new ImageIcon("imgs/menu/background.jpg");
 			backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_DEFAULT)); // Skalieren auf passende Größe
 			background.setIcon(backgroundIcon);
 		}
 		super.paint(g);
 		
 		if(isRunning())
-			drawMap();
+			drawMap(null);
 	}
 	private void keyPressedAction(final KeyEvent e)
 	{
@@ -268,8 +279,20 @@ public class Main extends JFrame
 		case VK_ENTER: // Enter gedrückt?
 			enterKeyPressed();
 			break;
-		case VK_SPACE:
-			spaceKeyPressed(); // Leertaste gedrückt?
+		case VK_SPACE: // Leertaste gedrückt?
+			spaceKeyPressed();
+			break;
+		case VK_F1: // F1 gedrückt?
+			F1KeyPressed();
+			break;
+		case VK_F2: // F2 gedrückt?
+			F2KeyPressed();
+			break;
+		case VK_F3: // F3 gedrückt?
+			F3KeyPressed();
+			break;
+		case VK_CONTROL: // Steuerung gedrückt?
+			ControlKeyPressed();
 			break;
 		}
 		
@@ -283,8 +306,17 @@ public class Main extends JFrame
 
 		if ((keyCode == VK_UP && walkdir == 0) || (keyCode == VK_RIGHT && walkdir == 1) || (keyCode == VK_DOWN && walkdir == 2) || (keyCode == VK_LEFT && walkdir == 3))
 			player.walkDirection = 4;
-		
+
+		if (keyCode == VK_CONTROL)
+			ControlKeyReleased();
 	}
+	
+	// Methoden sind Erbe des Editors
+	void F1KeyPressed() {}
+	void F2KeyPressed() {}
+	void F3KeyPressed() {}
+	void ControlKeyPressed() {}
+	void ControlKeyReleased() {}
 
 	private void rightArrowKeyPressed()
 	{
@@ -343,10 +375,8 @@ public class Main extends JFrame
 			// Menü schließen
 			setWalkingEnabled(true);
 			menuChoice = 0;
-			drawMap();
-		}
-		
-		
+			drawMap(null);
+		}	
 	}
 
 	void enterKeyPressed()
@@ -520,7 +550,7 @@ public class Main extends JFrame
 	}
 	
 	/** Zeichnet die aktuelle Map */
-	void drawMap() 
+	void drawMap(Graphics gScreen) 
 	{
 		final Image img = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR); // Ermöglicht Bild-Aktualisierung ohne flackern
 		final Graphics g = img.getGraphics();
@@ -557,7 +587,10 @@ public class Main extends JFrame
 		g.drawImage(imgPart, STARTX, STARTY, (int)(imgPart.getWidth(this)*zoom), (int)(imgPart.getHeight(this)*zoom), this);
 
 		// Grafik ersetzen
-		screen.getGraphics().drawImage(img, 0, 0, 800, 600, this);			
+		if(gScreen == null)
+			screen.getGraphics().drawImage(img, 0, 0, 800, 600, this);
+		else
+			gScreen.drawImage(img, 0, 0, 800, 600, this);
 	}
 
 	/** Zeichnet Hauptmenü */
@@ -715,16 +748,7 @@ public class Main extends JFrame
 		{
 			drawAttackButtons(g);
 			g.setColor(Color.green);
-			// === Attackenbeschreibungen ===
-			/*if(playerFighter.getAttacks()[0] != null) // Falls SpielerFighter eine Attacke im ersten Slot hat
-				g.drawString(playerFighter.getAttacks()[0].getAttackType().getName(), 355, 305); // Attackenbeschreibung 1
-			if(playerFighter.getAttacks()[1] != null) // Falls SpielerFighter eine Attacke im zweiten Slot hat
-				g.drawString(playerFighter.getAttacks()[1].getAttackType().getName(), 355, 433); // Attackenbeschreibung 2
-			if(playerFighter.getAttacks()[2] != null) // Falls SpielerFighter eine Attacke im dritten Slot hat
-				g.drawString(playerFighter.getAttacks()[2].getAttackType().getName(), 483, 305); // Attackenbeschreibung 3
-			if(playerFighter.getAttacks()[3] != null) // Falls SpielerFighter eine Attacke im vierten Slot hat
-				g.drawString(playerFighter.getAttacks()[3].getAttackType().getName(), 483, 433); // Attackenbeschreibung 4
-			g.fillRect(473, 413, 119, 119);*/
+			g.fillRect(473, 413, 119, 119);
 			activeAttack = playerFighter.getAttacks()[3];
 		}
 		
@@ -744,11 +768,11 @@ public class Main extends JFrame
 		// Pause, damit der Spieler die grüne, ausgewählte Attacke sieht
 		try
 		{
-			Thread.sleep(200);
+			Thread.sleep(500);
 		}
-		catch (InterruptedException ie)
+		catch (InterruptedException te)
 		{
-			ie.printStackTrace();
+			te.printStackTrace();
 		}
 		
 		// Falls der Gegner noch nicht tot ist, wird die grüne ausgewählte Attacke wieder normal
@@ -759,7 +783,7 @@ public class Main extends JFrame
 		}
 		else
 		{
-			drawMap();
+			drawMap(null);
 		}
 	}
 	
@@ -861,8 +885,8 @@ public class Main extends JFrame
 		return inBattle;
 	}
 
-	void setInBattle(boolean inBattle) {
-		this.inBattle = inBattle;
-		setWalkingEnabled(!inBattle);
+	void setInBattle(boolean inBattle1, Fighter fighter) {
+		this.enemy = fighter;
+		this.inBattle = inBattle1;
 	}
 }
