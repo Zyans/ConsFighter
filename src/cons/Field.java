@@ -40,25 +40,25 @@ class Field {
 	
 		// === Wasser ===
 	
-		 static final Field water_m = new Field(TEXTURE, 7, 1, 16).setCanGoThrough(false);
-		 static final Field water_br = new Field(TEXTURE, 8, 2, 16).setCanGoThrough(false);
-		 static final Field water_b = new Field(TEXTURE, 7, 2, 16).setCanGoThrough(false);
-		 static final Field water_bl = new Field(TEXTURE, 6, 2, 16).setCanGoThrough(false);
-		 static final Field water_l = new Field(TEXTURE, 6, 1, 16).setCanGoThrough(false);
-		 static final Field water_tl = new Field(TEXTURE, 6, 0, 16).setCanGoThrough(false);
-		 static final Field water_t = new Field(TEXTURE, 7, 0, 16).setCanGoThrough(false);
-		 static final Field water_tr = new Field(TEXTURE, 8, 0, 16).setCanGoThrough(false);
-		 static final Field water_r = new Field(TEXTURE, 8, 1, 16).setCanGoThrough(false);
+		 static final Field water_m = new Water(TEXTURE, 7, 1, true);
+		 static final Field water_br = new Water(TEXTURE, 8, 2, false);
+		 static final Field water_b = new Water(TEXTURE, 7, 2, false);
+		 static final Field water_bl = new Water(TEXTURE, 6, 2, false);
+		 static final Field water_l = new Water(TEXTURE, 6, 1, false);
+		 static final Field water_tl = new Water(TEXTURE, 6, 0, false);
+		 static final Field water_t = new Water(TEXTURE, 7, 0, false);
+		 static final Field water_tr = new Water(TEXTURE, 8, 0, false);
+		 static final Field water_r = new Water(TEXTURE, 8, 1, false);
 		
 		// === Island ===
 	
-		 static final Field island_br = new Field(TEXTURE, 8, 4, 16).setCanGoThrough(false);
+		 static final Field island_br = new Water(TEXTURE, 8, 4, false);
 		 static final Field island_b = water_t;
-		 static final Field island_bl = new Field(TEXTURE, 7, 4, 16).setCanGoThrough(false);
+		 static final Field island_bl = new Water(TEXTURE, 7, 4, false);
 		 static final Field island_l = water_r;
-		 static final Field island_tl = new Field(TEXTURE, 7, 3, 16).setCanGoThrough(false);
+		 static final Field island_tl = new Water(TEXTURE, 7, 3, false);
 		 static final Field island_t = water_b;
-		 static final Field island_tr = new Field(TEXTURE, 8, 3, 16).setCanGoThrough(false);
+		 static final Field island_tr = new Water(TEXTURE, 8, 3, false);
 		 static final Field island_r = water_l;
 		
 		// === Fels ===
