@@ -88,21 +88,6 @@ public class Map
 		setRect(m.b, x + 1, y + height, 1, width - 1, 1);
 	}
 	
-	void setGrassMountain(Mountain m, int x, int y, int width, int height)
-	{
-		setRect(m.tl, x, y, 1, 1, 1);
-		setRect(m.l, x, y + 1, 1, 1, height);
-		setRect(m.tr, x + width, y, 1, 1, 1);
-		setRect(m.r, x + width, y + 1, 1, 1, height - 1);
-		setRect(Field.meadow_light, x + 1, y + 1, 0, width - 1, height - 1);
-		setRect(m.br, x + width, y + height, 1, 1, 1);
-		setRect(m.bl, x, y + height, 1, 1, 1);
-		setRect(m.b, x + 1, y + height, 1, width - 1, 1);
-		setRect(m.gras_t, x + 2, y, 1, width - 2, 1);
-		setRect(m.gras_tl, x + 1, y, 1, 1, 1);
-		setRect(m.gras_tr, x + width - 1, y, 1, 1, 1);
-	}
-	
 	void setFence(Fence fence, int x, int y, int z, int width, int height)
 	{
 		setRect(fence.tb, x + 1, y, z, width - 1, 1);

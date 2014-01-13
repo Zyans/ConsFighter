@@ -1,6 +1,20 @@
 package cons;
 
-import static java.awt.event.KeyEvent.*;
+import static java.awt.event.KeyEvent.VK_A;
+import static java.awt.event.KeyEvent.VK_CONTROL;
+import static java.awt.event.KeyEvent.VK_D;
+import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_ENTER;
+import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_F1;
+import static java.awt.event.KeyEvent.VK_F2;
+import static java.awt.event.KeyEvent.VK_F3;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_S;
+import static java.awt.event.KeyEvent.VK_SHIFT;
+import static java.awt.event.KeyEvent.VK_UP;
+import static java.awt.event.KeyEvent.VK_W;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -24,9 +38,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
-import cons.IO.*;
+import cons.IO.XMLReader;
+import cons.IO.XMLWriter;
 
 public class Main extends JFrame
 {	
@@ -85,13 +101,6 @@ public class Main extends JFrame
 		
 		MouseListener MOUSELISTENER = new MouseAdapter()
 		{
-			public void mousePressed(final MouseEvent e)
-			{
-				e.getComponent().requestFocusInWindow();
-				if(inBattle){
-					calculateSelectedAttack(getPlayer().fighter, enemy, e);
-				}
-			}
 			public void mouseEntered(final MouseEvent e)
 			{
 				e.getComponent().requestFocusInWindow();
@@ -300,9 +309,7 @@ public class Main extends JFrame
 		case VK_SHIFT: // Steuerung gedrückt?
 			ShiftKeyPressed();
 			break;
-		}
-		
-			
+		}	
 	}
 
 	private void keyReleasedAction(final KeyEvent e)
@@ -624,190 +631,102 @@ public class Main extends JFrame
 	/** Zeichnet den aktuellen Stand eines Kampfes */
 	void drawBattle(Fighter playerFighter, Fighter opponentFighter, String text)
 	{
-		Graphics g = screen.getGraphics();
-		
 		SoundPlayer.soundBeep.play(); // Informiert Spieler mit Piep-Geräusch
+		
+		JFrame battleFrame = new JFrame();
+		JPanel battlePanel = new JPanel();
+		JLabel battleLabel = new JLabel("Lass uns kämpfen!");
+		JProgressBar enemyHealthBar = new JProgressBar();
+		JProgressBar enemyEnergyBar = new JProgressBar();
+		JProgressBar playerHealthBar = new JProgressBar();
+		JProgressBar playerEnergyBar = new JProgressBar();
+		
+		
+		enemyHealthBar.setValue((int)opponentFighter.getBattleHealth());
+		enemyEnergyBar.setValue((int)opponentFighter.getBattleEnergy());
+		playerHealthBar.setValue((int)playerFighter.getBattleHealth());
+		playerEnergyBar.setValue((int)playerFighter.getBattleEnergy());
+		
+		battleLabel.setBounds(10, 10, 150, 50);
+		enemyHealthBar.setBounds(600, 150, 150, 30);
+		enemyEnergyBar.setBounds(600, 190, 150, 30);
+		playerHealthBar.setBounds(10, 420, 150, 30);
+		playerEnergyBar.setBounds(10, 460, 150, 30);
+		
+		battlePanel.setLayout(null);
+		battlePanel.setBounds(250, 40, 800, 600);
+		battlePanel.add(battleLabel);
+		battlePanel.add(enemyHealthBar);
+		battlePanel.add(enemyEnergyBar);
+		battlePanel.add(playerHealthBar);
+		battlePanel.add(playerEnergyBar);
+		
+		Attack[] playerAttacks = playerFighter.getAttacks();
+		JButton[] playerAttackButtons = new JButton[playerAttacks.length];
+		
 
-		g.setColor(Color.white);
-		g.fillRect(0, 0, 800, 600);	// Screen-Hintergrund
-
-		// === Fighter des Spielers ===
+		for(int i = 0; i < playerAttacks.length; i++){
+			playerAttackButtons[i] = new JButton();
+			
+			if(playerFighter.getAttacks()[i]!= null)
+				playerAttackButtons[i].setText(playerAttacks[i].getAttackType().getName());//playerAttackButtons[i].setText("hallo");
+			
+			/*playerAttackButtons[i].addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					activeAttack = playerAttacks[i]; 
+				}
+			});*/
+			
 		
-		g.setColor(Color.black);
-		g.drawRect(50, 264, 256, 256); // Rahmen für SpielerFighter-Bild
-		
-		g.drawRect(50, 525, 256, 10); // Rahmen Gesundheitsbalken
-		g.drawRect(50, 540, 256, 10); // Rahmen Energiebalken
-		
-		// Falls SpielerFighter-Gesundheit größer 0 ist
-		if(playerFighter.getBattleHealth()>0)
-		{
-			g.setColor(new Color(0, 127, 255)); // Cyan
-			g.fillRect(51, 526, (int)(playerFighter.getBattleHealth() / playerFighter.getHealthLimit() * 255), 9); // Gesundheits-Balken (Anteil aktueller Gesundheit von maximaler Gesundheit)
+			battlePanel.add(playerAttackButtons[i]);
+			
+			switch(i){
+			case 0:
+				playerAttackButtons[i].setBounds(10, 500, 80, 30);
+				break;
+			case 1:
+				playerAttackButtons[i].setBounds(100, 500, 80, 30);
+				break;
+			case 2:
+				playerAttackButtons[i].setBounds(10, 540, 80, 30);
+				break;	
+			case 3:
+				playerAttackButtons[i].setBounds(100, 540, 80, 30);
+				break;
+			case 4:
+				playerAttackButtons[i].setBounds(10, 580, 80, 30);
+				break;
+			}
+			battlePanel.add(playerAttackButtons[i]);
 		}
-
-		// Falls SpielerFighter-Energie größer 0 ist
-		if(playerFighter.getBattleEnergy()>=0)
-		{
-			g.setColor(new Color(255, 127, 0));	// Orange
-			g.fillRect(51, 541, (int)(playerFighter.getBattleEnergy() / playerFighter.getEnergyLimit() * 255), 9); // Energie-Balken (Anteil aktueller Energie von maximaler Energie)
-		}
-		
-		// === Attacken ===
-
-		g.setColor(new Color(200, 200, 200)); // Helles Grau
-		
-		g.fillRect(324, 264, 426, 286);	// Attackenauswahl Hintergrund
-		
-		drawAttackButtons(g);
-		
-		g.fillRect(473, 413, 119, 119); // Attackenfläche 4
-		
-		g.setColor(new Color(255, 255, 255)); // Weiß
-		
-		// === Attackenbeschreibungen ===
-		
-		if(playerFighter.getAttacks()[0] != null) // Falls SpielerFighter eine Attacke im ersten Slot hat
-			g.drawString(playerFighter.getAttacks()[0].getAttackType().getName(), 355, 305); // Attackenbeschreibung 1
-		if(playerFighter.getAttacks()[1] != null) // Falls SpielerFighter eine Attacke im zweiten Slot hat
-			g.drawString(playerFighter.getAttacks()[1].getAttackType().getName(), 355, 433); // Attackenbeschreibung 2
-		if(playerFighter.getAttacks()[2] != null) // Falls SpielerFighter eine Attacke im dritten Slot hat
-			g.drawString(playerFighter.getAttacks()[2].getAttackType().getName(), 483, 305); // Attackenbeschreibung 3
-		if(playerFighter.getAttacks()[3] != null) // Falls SpielerFighter eine Attacke im vierten Slot hat
-			g.drawString(playerFighter.getAttacks()[3].getAttackType().getName(), 483, 433); // Attackenbeschreibung 4
-		
-		// === Gegner ===
-
-		g.setColor(Color.black);
-		g.drawRect(622, 50, 128, 128); // Rahmen für GegnerFighter-Bild
-		
-		g.drawRect(622, 183, 128, 5); // Rahmen Gesundheitsbalken
-		g.drawRect(622, 193, 128, 5); // Rahmen EnergieBalken
-		
-		g.setColor(new Color(0, 127, 255)); // Cyan
-		g.fillRect(623, 184, (int)(opponentFighter.getBattleHealth() / opponentFighter.getHealthLimit() * 127), 4); // Gesundheits-Balken (Anteil aktueller Gesundheit von maximaler Gesundheit)
-		g.setColor(new Color(255, 127, 0)); // Orange
-		g.fillRect(623, 194, (int)(opponentFighter.getBattleEnergy() / opponentFighter.getEnergyLimit() * 127), 4); // Energie-Balken (Anteil aktueller Energie von maximaler Energie)
-		
-		drawBattleInformation(text); // Informiert den Spieler
-	}
-	
-	/** Zeichnet AttackButtons, damit Spieler Attacke auswählen kann */
-	void drawAttackButtons(Graphics g)
-	{
-		g.setColor(Color.black);
-		
-		g.drawRect(344, 284, 120, 120); // Attackenrahmen 1
-		g.drawRect(344, 412, 120, 120); // Attackenrahmen 2
-		g.drawRect(472, 284, 120, 120); // Attackenrahmen 3
-		g.drawRect(472, 412, 120, 120); // Attackenrahmen 4
-		
-		g.setColor(new Color(100, 100, 100)); // Grau
-		
-		g.fillRect(345, 285, 119, 119); // Attackenfläche 1
-		g.fillRect(345, 413, 119, 119); // Attackenfläche 2
-		g.fillRect(473, 285, 119, 119); // Attackenfläche 3
-		g.fillRect(473, 413, 119, 119); // Attackenfläche 4
-	}
-	
-	/** Berechnet mit MouseEvent (e), welche Attacke vom Spieler ausgewählt wurde und führt eine Kampfrunde */
-	void calculateSelectedAttack(Fighter playerFighter, Fighter opponentFighter, MouseEvent e)
-	{
-		Graphics g = screen.getGraphics();
-		int mouseX = e.getX();
-		int mouseY = e.getY();
-		
-		setWalkingEnabled(false);
-		activeAttack = null;
-		
-		
-		
-		// 1. Attacke ausgewählt?
-		if(mouseX >= 344 && mouseX<= 464 && mouseY >= 284 && mouseY <= 404)
-		{
-			drawAttackButtons(g);
-			g.setColor(Color.green);
-			g.fillRect(345, 285, 119, 119);
-			activeAttack = playerFighter.getAttacks()[0];
-		}
-
-		// 2. Attacke ausgewählt?
-		if(mouseX >= 344 && mouseX<= 464 && mouseY >= 412 && mouseY <= 532)
-		{
-			drawAttackButtons(g);
-			g.setColor(Color.green);
-			g.fillRect(345, 413, 119, 119);
-			activeAttack = playerFighter.getAttacks()[1];
-		}
-
-		// 3. Attacke ausgewählt?
-		if(mouseX >= 472 && mouseX<= 592 && mouseY >= 284 && mouseY <= 404)
-		{
-			drawAttackButtons(g);
-			g.setColor(Color.green);
-			g.fillRect(473, 285, 119, 119);
-			activeAttack = playerFighter.getAttacks()[2];
-		}
-
-		// 4. Attacke ausgewählt?
-		if(mouseX >= 472 && mouseX<= 592 && mouseY >= 412 && mouseY <= 532)
-		{
-			drawAttackButtons(g);
-			g.setColor(Color.green);
-			g.fillRect(473, 413, 119, 119);
-			activeAttack = playerFighter.getAttacks()[3];
-		}
+			
 		
 		// Keine Attacke ausgewählt?
-		if(activeAttack == null)
-		{
-			return;
-		}
+				if(activeAttack == null)
+				{
+					return;
+				}
+				
+				// Gegner wählt Attacke
+				Attack opponentAttack = opponentFighter.getAttacks()[(int)Math.round(Math.random()*3)];
+				
+				// Informiert Spieler über Kampfgeschehen der Runde
+				String playerAttackInformation = "P: " + playerFighter.attackFighter(activeAttack, opponentFighter);
+				String opponentAttackInformation = "G: " + opponentFighter.attackFighter(opponentAttack, playerFighter);
 		
-		// Gegner wählt Attacke
-		Attack opponentAttack = opponentFighter.getAttacks()[(int)Math.round(Math.random()*3)];
 		
-		// Informiert Spieler über Kampfgeschehen der Runde
-		String playerAttackInformation = "P: " + playerFighter.attackFighter(activeAttack, opponentFighter);
-		String opponentAttackInformation = "G: " + opponentFighter.attackFighter(opponentAttack, playerFighter);
+		battleFrame.add(battlePanel);
 		
-		// Pause, damit der Spieler die grüne, ausgewählte Attacke sieht
-		try
-		{
-			Thread.sleep(500);
-		}
-		catch (InterruptedException te)
-		{
-			te.printStackTrace();
-		}
+		battleFrame.setSize(800, 600);
 		
-		// Falls der Gegner noch nicht tot ist, wird die grüne ausgewählte Attacke wieder normal
-		if(inBattle)
-		{
-			drawBattle(playerFighter, opponentFighter, playerAttackInformation + "\n" + opponentAttackInformation);
-			g.setColor(Color.black);
-		}
-		else
-		{
-			drawMap(null);
-		}
+		battleFrame.setVisible(true);
 	}
 	
-	/** Informiert Spieler mit Text (text) über Kampfgeschehen */
-	void drawBattleInformation(String text)
-	{
-		Graphics g = screen.getGraphics();
-		
-		String[] textparts = text.split("\n"); // Teilt zur getrennten Anzeige zwischen Zeilen auf
-		
-		g.setColor(Color.white);
-		g.fillRect(50, 50, 300, 50); // Hintergrund
-		g.setColor(Color.black);
-		g.drawRect(50, 50, 300, 50); // Rahmen
-		
-		for(int i = 0; i < textparts.length; i++)
-			g.drawString(textparts[i], 55, 65 + i * 15); // Schreibt Zeilen uuntereinander
-	}
+	
+
+	
+	
 
 	/** Ermöglicht das Wechseln von Anzeigen vor Spielstart */
 	void hideMenu()

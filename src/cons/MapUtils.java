@@ -36,7 +36,7 @@ final class MapUtils {
 
 		// === Landschaften ===
 
-		maps[0].setGrassMountain(Mountain.mountain2, 3, 18, 24, 8);
+		maps[0].setMountain(Mountain.mountain3, 3, 18, 24, 8);
 		maps[0].setWater(5, 19, 7, 6);
 		maps[0].setIsland(Field.meadow_light, 6, 20, 4, 4);
 		maps[0].setPcdesk(7, 21);

@@ -2,26 +2,38 @@ package cons;
 
 class Mountain
 {
-	static final Mountain mountain1 = new Mountain(1);
-	static final Mountain mountain2 = new Mountain(2);
+	static final Mountain mountain1 = new Mountain(9, 4, false);
+	static final Mountain mountain2 = new Mountain(12, 4, false);
+	static final Mountain mountain3 = new Mountain(9, 4, true);
+	static final Mountain mountain4 = new Mountain(12, 4, true);
 	
-	final Field t, b, l, r, tl, bl, tr, br, m, gras_t, gras_tr, gras_tl;
+	final MountainField t, b, l, r, tl, bl, tr, br, m, cbl, ctl, cbr, ctr;
+	final MountainField gras_tr, gras_tl;
 	
-	private static final String MOUNTAIN_HOME_DIRECTORY = "mountains/mountain";
-	
-	Mountain(int id)
+	Mountain(int startX, int startY, boolean meadowmountain)
 	{
-		t = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/t.png").setCanGoThrough(false);
-		b = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/b.png").setCanGoThrough(false);
-		l = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/l.png").setCanGoThrough(false);
-		r = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/r.png").setCanGoThrough(false);
-		tl = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/tl.png").setCanGoThrough(false);
-		bl = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/bl.png").setCanGoThrough(false);
-		tr = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/tr.png").setCanGoThrough(false);
-		br = new Field(MOUNTAIN_HOME_DIRECTORY+ id + "/br.png").setCanGoThrough(false);
-		m = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/m.png");
-		gras_t = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/gras_t.png").setCanGoThrough(false);
-		gras_tl = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/gras_tl.png").setCanGoThrough(false);
-		gras_tr = new Field(MOUNTAIN_HOME_DIRECTORY + id + "/gras_tr.png").setCanGoThrough(false);
+		b = new MountainField(this, Field.TEXTURE, startX+1, startY+2, false);
+		l = new MountainField(this, Field.TEXTURE, startX, startY+1, false);
+		r = new MountainField(this, Field.TEXTURE, startX+2, startY+1, false);
+		bl = new MountainField(this, Field.TEXTURE, startX, startY+2, false);
+		br = new MountainField(this, Field.TEXTURE, startX+2, startY+2, false);
+		tl = new MountainField(this, Field.TEXTURE, startX, startY, false);
+		tr = new MountainField(this, Field.TEXTURE, startX+2, startY, false);
+		cbl = new MountainField(this, Field.TEXTURE, startX, startY+4, false);
+		cbr = new MountainField(this, Field.TEXTURE, startX+1, startY+4, false);
+		
+		if(meadowmountain) {
+			gras_tr = new MountainField(this, Field.TEXTURE, startX+2, startY+3, false);
+			gras_tl = new MountainField(this, Field.TEXTURE, startX, startY+3, false);
+			t = new MountainField(this, Field.TEXTURE, startX+1, startY+3, false);
+			m = (MountainField) new MountainField(this, Field.TEXTURE, 0, 0, true).setCanGoThrough(true);
+		} else {
+			gras_tr = null;
+			gras_tl = null;
+			t = new MountainField(this, Field.TEXTURE, startX+1, startY, false);
+			m = new MountainField(this, Field.TEXTURE, startX+1, startY+1, true);
+		}
+		ctl = m;
+		ctr = m;
 	}
 }
