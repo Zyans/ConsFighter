@@ -58,24 +58,29 @@ public class Main extends JFrame
 	private boolean startScreenDisplayed = true;
 	int menuChoice = 0;
 	private final int VK_SPACE = 32;
-	// === Hauptmenü-Komponenten ===
-	private final JButton buttonStart = new JButton("Start", new ImageIcon("imgs/menu/button_start.png"));
-	private final JButton buttonHelp = new JButton("Help", new ImageIcon("imgs/menu/button_help.png"));
-	private final JButton buttonCredits = new JButton("Credits", new ImageIcon("imgs/menu/button_credits.png"));
-	private final JButton buttonWebsite = new JButton("Website", new ImageIcon("imgs/menu/button_website.png"));
-	private final JLabel background = new JLabel();
-	private final JLabel headline = new JLabel("ConsFighter");
-	public final JPanel screen = new JPanel();
+	// === HauptmenÃ¼-Komponenten ===
+	private JButton buttonStart = new JButton("Start", new ImageIcon("imgs/menu/button_start.png"));
+	private JButton buttonHelp = new JButton("Help", new ImageIcon("imgs/menu/button_help.png"));
+	private JButton buttonCredits = new JButton("Credits", new ImageIcon("imgs/menu/button_credits.png"));
+	private JButton buttonWebsite = new JButton("Website", new ImageIcon("imgs/menu/button_website.png"));
+	private JLabel background = new JLabel();
+	private JLabel headline = new JLabel("ConsFighter");
+	public JPanel screen = new JPanel();
 
 	// === Hilfe- und Credits-Komponenten ===
-	private final JTextArea ctext = new JTextArea();
-	private final JTextArea htext = new JTextArea();
-	private final JButton backToMenu = new JButton("Back");
+	private JTextArea ctext = new JTextArea();
+	private JTextArea htext = new JTextArea();
+	private JButton backToMenu = new JButton("Back");
 	boolean showLevel1 = true, showLevel2 = true, showLevel3 = true, showPersons = true, showGrid = false;
 	
 	double zoom = 1;
+	
+	/*----------- fÃ¼r drawBattle----------*/
+	Attack activeAttack = null;
+	int i;
+	/*------------------------------------*/
 
-	private Attack activeAttack;
+	//private Attack activeAttack = null;
 	private Fighter enemy;
 	
 	public static void main(String args[]) {
@@ -89,7 +94,7 @@ public class Main extends JFrame
 	/** Initialisierungsmethode */
 	public void init()
 	{
-		// Menü-Theme spielen
+		// MenÃ¼-Theme spielen
 		SoundPlayer.soundMenu.play();
 
 		// Panel-Eigenschaften setzen
@@ -109,7 +114,7 @@ public class Main extends JFrame
 		
 		MouseWheelListener MOUSELWHEELLISTENER = new MouseAdapter(){
 			public void mouseWheelMoved(MouseWheelEvent e){
-				if(e.getWheelRotation()<0){
+				if(e.getWheelRotation() < 0){
 					zoom *= 1.1;
 				} else {
 					zoom /= 1.1;
@@ -133,7 +138,7 @@ public class Main extends JFrame
 			}
 		};
 		
-		// Listener hinzufügen
+		// Listener hinzufÃ¼gen
 		panel.addMouseListener(MOUSELISTENER);
 		panel.addMouseWheelListener(MOUSELWHEELLISTENER);
 		screen.addMouseListener(MOUSELISTENER);
@@ -156,7 +161,7 @@ public class Main extends JFrame
 		screen.setBounds(0, 0, 800, 600);
 
 		
-		// Komponenten hinzufügen
+		// Komponenten hinzufÃ¼gen
 		panel.add(buttonStart);
 		panel.add(buttonHelp);
 		panel.add(buttonCredits);
@@ -210,7 +215,7 @@ public class Main extends JFrame
 			}
 		});
 		
-		// Überschrift
+		// Ãœberschrift
 
 		headline.setFont(new Font("Segoe UI", 0, 50));
 		headline.setForeground(Color.white);
@@ -222,7 +227,7 @@ public class Main extends JFrame
 		ctext.setWrapStyleWord(true);
 		ctext.setOpaque(false);
 		ctext.setAlignmentX(CENTER_ALIGNMENT);
-		ctext.setText("Programmed by Lukas Tassanyi, Jonas Bürkner and Markus Lötzsch");
+		ctext.setText("Programmed by Lukas Tassanyi, Jonas BÃ¼rkner and Markus LÃ¶tzsch");
 
 		// Hilfe-Anzeige
 		
@@ -234,9 +239,9 @@ public class Main extends JFrame
 		htext.setAlignmentX(CENTER_ALIGNMENT);
 		htext.setText(
 			"=== STEUERUNG ===\n\n" +
-			"Pfeiltasten   ...    laufen und im Menü navigieren\n" +
+			"Pfeiltasten   ...    laufen und im MenÃ¼ navigieren\n" +
 			"Leertaste     ...    interagieren\n" +
-			"Escape        ...    Menü\n\n\n" +
+			"Escape        ...    MenÃ¼\n\n\n" +
 			"=== ALLGEMEINES ===\n\n" +
 			"Version       ...    Alpha 4\n" +
 			"Webseite      ...    psychohouse.bplaced.com"
@@ -251,11 +256,11 @@ public class Main extends JFrame
 
 	public void paint(final Graphics g)
 	{
-		if(startScreenDisplayed) // im Startmenü?
+		if(startScreenDisplayed) // im StartmenÃ¼?
 		{
 			// Hintergrundbild aktualisieren
 			final ImageIcon backgroundIcon = new ImageIcon("imgs/menu/background.jpg");
-			backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_DEFAULT)); // Skalieren auf passende Größe
+			backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_DEFAULT)); // Skalieren auf passende GrÃ¶ÃŸe
 			background.setIcon(backgroundIcon);
 		}
 		super.paint(g);
@@ -285,28 +290,28 @@ public class Main extends JFrame
 		case VK_A:
 			leftArrowKeyPressed();
 			break;	
-		case VK_ESCAPE: // Escape gedrückt?
+		case VK_ESCAPE: // Escape gedrÃ¼ckt?
 			escapeKeyPressed();
 			break;
-		case VK_ENTER: // Enter gedrückt?
+		case VK_ENTER: // Enter gedrÃ¼ckt?
 			enterKeyPressed();
 			break;
-		case VK_SPACE: // Leertaste gedrückt?
+		case VK_SPACE: // Leertaste gedrÃ¼ckt?
 			spaceKeyPressed();
 			break;
-		case VK_F1: // F1 gedrückt?
+		case VK_F1: // F1 gedrÃ¼ckt?
 			F1KeyPressed();
 			break;
-		case VK_F2: // F2 gedrückt?
+		case VK_F2: // F2 gedrÃ¼ckt?
 			F2KeyPressed();
 			break;
-		case VK_F3: // F3 gedrückt?
+		case VK_F3: // F3 gedrÃ¼ckt?
 			F3KeyPressed();
 			break;
-		case VK_CONTROL: // Steuerung gedrückt?
+		case VK_CONTROL: // Steuerung gedrÃ¼ckt?
 			ControlKeyPressed();
 			break;
-		case VK_SHIFT: // Steuerung gedrückt?
+		case VK_SHIFT: // Steuerung gedrÃ¼ckt?
 			ShiftKeyPressed();
 			break;
 		}	
@@ -324,7 +329,7 @@ public class Main extends JFrame
 			ControlKeyReleased();
 	}
 	
-	// Methoden sind Erbe für den Editor
+	// Methoden sind Erbe fÃ¼r den Editor
 	void F1KeyPressed() {}
 	void F2KeyPressed() {}
 	void F3KeyPressed() {}
@@ -374,19 +379,19 @@ public class Main extends JFrame
 	
 	private void escapeKeyPressed()
 	{
-		if(!isWalkingEnabled() && menuChoice == 0) // Darf ESC-Menü nicht aufgerufen werden?
+		if(!isWalkingEnabled() && menuChoice == 0) // Darf ESC-MenÃ¼ nicht aufgerufen werden?
 			return;
 		
 		if(menuChoice == 0)
 		{
-			// Menü öffnen
+			// MenÃ¼ Ã¶ffnen
 			setWalkingEnabled(false);
 			menuChoice = 1;
 			drawMenu();
 		}
 		else
 		{
-			// Menü schließen
+			// MenÃ¼ schlieÃŸen
 			setWalkingEnabled(true);
 			menuChoice = 0;
 			drawMap(null);
@@ -460,15 +465,14 @@ public class Main extends JFrame
 			fields[1].onSpacePressed();
 		if (fields[2] != null) // Feld in 3. Ebene?
 			fields[2].onSpacePressed();
-
 	}
 
 	
 	/** Startet das Spiel, sobald Start-Button aktiviert wird */
 	void buttonStart_ActionPerformed(final ActionEvent evt)
 	{
-		hideMenu(); // Komponenten entfernen
-		panel.add(screen); // Komponent hinzufügen
+		hideMenu(); 		// Komponenten entfernen
+		panel.add(screen);  // Komponent hinzufÃ¼gen
 		// Aktualisieren
 		panel.validate(); 
 		panel.repaint();
@@ -490,12 +494,12 @@ public class Main extends JFrame
 		setRunning(true);
 		setWalkingEnabled(true);
 
-		// Thread für gleichschnelles Laufen auf jedem PC
+		// Thread fÃ¼r gleichschnelles Laufen auf jedem PC
 		loop = new Loop(this);
 		loop.start();
 
 		player.place.drawImage(this);
-		SoundPlayer.soundMenu.stop(); // Menü-Musik beenden, damit Stadt-Theme gespielt werden kann
+		SoundPlayer.soundMenu.stop(); // MenÃ¼-Musik beenden, damit Stadt-Theme gespielt werden kann
 		player.place.getSoundBackground().play();
 		System.out.println("100%");
 	}
@@ -506,7 +510,7 @@ public class Main extends JFrame
 		// Komponenten entfernen
 		hideMenu();
 
-		// Komponenten hinzufügen
+		// Komponenten hinzufÃ¼gen
 		panel.add(htext);
 		panel.add(backToMenu);
 
@@ -521,7 +525,7 @@ public class Main extends JFrame
 		// Komponenten entfernen
 		hideMenu();
 		
-		// Komponenten hinzufügen
+		// Komponenten hinzufÃ¼gen
 		panel.add(ctext);
 		panel.add(backToMenu);
 		
@@ -530,7 +534,7 @@ public class Main extends JFrame
 		panel.repaint();
 	}
 
-	/** ÖFfnet die Homepage, sobald Website-Button aktiviert wird */
+	/** Ã–Ffnet die Homepage, sobald Website-Button geklickt wird */
 	private void buttonWebsite_ActionPerformed(final ActionEvent evt)
 	{
 		try {
@@ -540,7 +544,7 @@ public class Main extends JFrame
 		}
 	}
 
-	/** Lädt das Hauptmenü wieder, damit erneut eine menü-Option gewählt werden kann */
+	/** LÃ¤dt das HauptmenÃ¼ wieder, damit erneut eine menÃ¼-Option gewÃ¤hlt werden kann */
 	private void backToMenu_ActionPerformed(final ActionEvent evt)
 	{
 		// Komponenten entfernen
@@ -548,7 +552,7 @@ public class Main extends JFrame
 		panel.remove(htext);
 		panel.remove(backToMenu);
 		
-		// Komponenten hinzufügen
+		// Komponenten hinzufÃ¼gen
 		panel.add(buttonStart);
 		panel.add(buttonHelp);
 		panel.add(buttonCredits);
@@ -565,7 +569,7 @@ public class Main extends JFrame
 	/** Zeichnet die aktuelle Map */
 	void drawMap(Graphics gScreen) 
 	{
-		final Image img = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR); // Ermöglicht Bild-Aktualisierung ohne flackern
+		final Image img = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR); // ErmÃ¶glicht Bild-Aktualisierung ohne flackern
 		final Graphics g = img.getGraphics();
 		
 		player.place.drawPartOfImage(this, player.xPos - 1, player.yPos - 1, player.xPos + 3, player.yPos + 3);
@@ -606,41 +610,40 @@ public class Main extends JFrame
 			gScreen.drawImage(img, 0, 0, 800, 600, this);
 	}
 
-	/** Zeichnet Hauptmenü */
+	/** Zeichnet HauptmenÃ¼ */
 	void drawMenu() 
 	{
 		final Graphics g = screen.getGraphics();
-		SoundPlayer.soundBeep.play(); // Informiert Spieler mit Piep-Geräusch
+		SoundPlayer.soundBeep.play(); // Informiert Spieler mit Piep-GerÃ¤usch
 
 		g.setColor(new Color(22, 23, 27)); // Dunkles Grau
-		g.fillRect(590, 10, 200, 580); // Menü-Fläche
+		g.fillRect(590, 10, 200, 580); // MenÃ¼-FlÃ¤che
 
 		g.setColor(new Color(255, 127, 0)); // Orange
-		g.drawRect(592, 12, 196, 576); // Menü-Rahmen
+		g.drawRect(592, 12, 196, 576); // MenÃ¼-Rahmen
 
-		// Menü-Optionen
+		// MenÃ¼-Optionen
 		
 		g.drawString("Hilfe", 610, 40);
 		g.drawString("Spielstand Laden", 610, 80);
 		g.drawString("Spielstand Speichern", 610, 120);
-		g.drawString("Schließen", 610, 160);
+		g.drawString("SchlieÃŸen", 610, 160);
 		g.drawString("x: " + player.xPos + " y: " + player.yPos, 610, 240); // Position des Spielers, wird vor Release entfernt
-		g.drawLine(610, menuChoice * 40 + 5, 770, menuChoice * 40 + 5); // Unterstreicht die aktuell ausgewählte Menü-Option
+		g.drawLine(610, menuChoice * 40 + 5, 770, menuChoice * 40 + 5); // Unterstreicht die aktuell ausgewÃ¤hlte MenÃ¼-Option
 	}
 
 	/** Zeichnet den aktuellen Stand eines Kampfes */
 	void drawBattle(Fighter playerFighter, Fighter opponentFighter, String text)
-	{
-		SoundPlayer.soundBeep.play(); // Informiert Spieler mit Piep-Geräusch
+	{		
+		SoundPlayer.soundBeep.play(); // Informiert Spieler mit Piep-GerÃ¤usch
 		
 		JFrame battleFrame = new JFrame();
 		JPanel battlePanel = new JPanel();
-		JLabel battleLabel = new JLabel("Lass uns kämpfen!");
+		JLabel battleLabel = new JLabel(text);
 		JProgressBar enemyHealthBar = new JProgressBar();
 		JProgressBar enemyEnergyBar = new JProgressBar();
 		JProgressBar playerHealthBar = new JProgressBar();
 		JProgressBar playerEnergyBar = new JProgressBar();
-		
 		
 		enemyHealthBar.setValue((int)opponentFighter.getBattleHealth());
 		enemyEnergyBar.setValue((int)opponentFighter.getBattleEnergy());
@@ -653,6 +656,16 @@ public class Main extends JFrame
 		playerHealthBar.setBounds(10, 420, 150, 30);
 		playerEnergyBar.setBounds(10, 460, 150, 30);
 		
+		enemyHealthBar.setStringPainted(true);
+		enemyEnergyBar.setStringPainted(true);
+		playerHealthBar.setStringPainted(true);
+		playerEnergyBar.setStringPainted(true);
+		
+		enemyHealthBar.setString("Leben des Gegners");
+		enemyEnergyBar.setString("Energie des Gegners");
+		playerHealthBar.setString("deine Leben");
+		playerEnergyBar.setString("deine Energie");
+		
 		battlePanel.setLayout(null);
 		battlePanel.setBounds(250, 40, 800, 600);
 		battlePanel.add(battleLabel);
@@ -661,59 +674,61 @@ public class Main extends JFrame
 		battlePanel.add(playerHealthBar);
 		battlePanel.add(playerEnergyBar);
 		
-		Attack[] playerAttacks = playerFighter.getAttacks();
-		JButton[] playerAttackButtons = new JButton[playerAttacks.length];
+		final Attack[] playerAttacks = playerFighter.getAttacks();
+		final JButton[] playerAttackButtons = new JButton[playerAttacks.length];
 		
-
-		for(int i = 0; i < playerAttacks.length; i++){
+		for(i = 0; i < playerAttacks.length; i++){
 			playerAttackButtons[i] = new JButton();
 			
 			if(playerFighter.getAttacks()[i]!= null)
-				playerAttackButtons[i].setText(playerAttacks[i].getAttackType().getName());//playerAttackButtons[i].setText("hallo");
+				playerAttackButtons[i].setText(playerAttacks[i].getAttackType().getName());
 			
-			/*playerAttackButtons[i].addActionListener(new ActionListener() {
+			
+			
+			playerAttackButtons[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					activeAttack = playerAttacks[i]; 
+					 setActiveAttack(playerAttacks[i]);
+					 System.out.println(activeAttack.getAttackType().getName());				
 				}
-			});*/
+			});
 			
 		
 			battlePanel.add(playerAttackButtons[i]);
 			
 			switch(i){
 			case 0:
-				playerAttackButtons[i].setBounds(10, 500, 80, 30);
+				playerAttackButtons[i].setBounds(10, 500, 150, 30);
 				break;
 			case 1:
-				playerAttackButtons[i].setBounds(100, 500, 80, 30);
+				playerAttackButtons[i].setBounds(170, 500, 150, 30);
 				break;
 			case 2:
-				playerAttackButtons[i].setBounds(10, 540, 80, 30);
+				playerAttackButtons[i].setBounds(10, 540, 150, 30);
 				break;	
 			case 3:
-				playerAttackButtons[i].setBounds(100, 540, 80, 30);
+				playerAttackButtons[i].setBounds(170, 540, 150, 30);
 				break;
 			case 4:
-				playerAttackButtons[i].setBounds(10, 580, 80, 30);
+				playerAttackButtons[i].setBounds(10, 580, 150, 30);
 				break;
 			}
 			battlePanel.add(playerAttackButtons[i]);
 		}
 			
 		
-		// Keine Attacke ausgewählt?
-				if(activeAttack == null)
+		// Keine Attacke ausgewÃ¤hlt?
+				/*if(activeAttack == null)
 				{
 					return;
 				}
 				
-				// Gegner wählt Attacke
+				// Gegner wÃ¤hlt Attacke
 				Attack opponentAttack = opponentFighter.getAttacks()[(int)Math.round(Math.random()*3)];
 				
-				// Informiert Spieler über Kampfgeschehen der Runde
+				// Informiert Spieler Ã¼ber Kampfgeschehen der Runde
 				String playerAttackInformation = "P: " + playerFighter.attackFighter(activeAttack, opponentFighter);
-				String opponentAttackInformation = "G: " + opponentFighter.attackFighter(opponentAttack, playerFighter);
+				String opponentAttackInformation = "G: " + opponentFighter.attackFighter(opponentAttack, playerFighter);*/
 		
 		
 		battleFrame.add(battlePanel);
@@ -728,7 +743,7 @@ public class Main extends JFrame
 	
 	
 
-	/** Ermöglicht das Wechseln von Anzeigen vor Spielstart */
+	/** ErmÃ¶glicht das Wechseln von Anzeigen vor Spielstart */
 	void hideMenu()
 	{	
 		
@@ -754,7 +769,7 @@ public class Main extends JFrame
 		g.setFont(new Font("Segoe UI", 0, 12)); // spezielle Schrift zur Unterscheidung von Monolog
 		
 		g.setColor(Color.white);
-		g.fillRect(0, 500, 800, 100); // Fläche
+		g.fillRect(0, 500, 800, 100); // FlÃ¤che
 		
 		g.setColor(new Color(64, 64, 64));
 		g.drawRect(0, 500, 799, 99); // Rahmen
@@ -771,7 +786,7 @@ public class Main extends JFrame
 		g.setFont(new Font("Segoe UI", 0, 12)); // spezielle Schrift zur Unterscheidung von Dialog
 		
 		g.setColor(Color.white);
-		g.fillRect(0, 500, 800, 100); // Fläche
+		g.fillRect(0, 500, 800, 100); // FlÃ¤che
 		
 		g.setColor(new Color(64, 64, 64));
 		g.drawRect(0, 500, 799, 99); // Rahmen
@@ -808,6 +823,15 @@ public class Main extends JFrame
 
 	boolean isInBattle() {
 		return inBattle;
+	}
+	
+
+	public Attack getActiveAttack() {
+		return activeAttack;
+	}
+
+	public void setActiveAttack(Attack activeAttack) {
+		this.activeAttack = activeAttack;
 	}
 
 	void setInBattle(boolean inBattle1, Fighter fighter) {
