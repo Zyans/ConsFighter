@@ -161,7 +161,7 @@ class Field {
 
 	
 	
-	
+	////----------------------------------------------------------------------
 	Field(String imgPath) {
 		setImage(imgPath);		
 	}
@@ -179,7 +179,7 @@ class Field {
         }
 		
 	}
-	
+////---------------------------------------------------------------------------	
 			
 	Field(Texture texture, int x, int y, int height) {
         setImage(texture, x, y, height);

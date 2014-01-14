@@ -11,12 +11,12 @@ class Fence
 	
 	Fence(int id)
 	{
-		tb = new Field(FENCES_HOME_DIRECTORY + id + "/tb.png") .setCanGoThrough(false);
-		l  = new Field(FENCES_HOME_DIRECTORY + id + "/l.png")  .setCanGoThrough(false);
-		r  = new Field(FENCES_HOME_DIRECTORY + id + "/r.png")  .setCanGoThrough(false);
-		tl = new Field(FENCES_HOME_DIRECTORY + id + "/tl.png") .setCanGoThrough(false);
-		bl = new Field(FENCES_HOME_DIRECTORY + id + "/bl.png") .setCanGoThrough(false);
-		tr = new Field(FENCES_HOME_DIRECTORY + id + "/tr.png") .setCanGoThrough(false);
-		br = new Field(FENCES_HOME_DIRECTORY + id + "/br.png") .setCanGoThrough(false);
+		tb = new Field(FENCES_HOME_DIRECTORY + id + "/tb.png", false) .setCanGoThrough(false);
+		l  = new Field(FENCES_HOME_DIRECTORY + id + "/l.png", false)  .setCanGoThrough(false);
+		r  = new Field(FENCES_HOME_DIRECTORY + id + "/r.png", false)  .setCanGoThrough(false);
+		tl = new Field(FENCES_HOME_DIRECTORY + id + "/tl.png", false) .setCanGoThrough(false);
+		bl = new Field(FENCES_HOME_DIRECTORY + id + "/bl.png", false) .setCanGoThrough(false);
+		tr = new Field(FENCES_HOME_DIRECTORY + id + "/tr.png", false) .setCanGoThrough(false);
+		br = new Field(FENCES_HOME_DIRECTORY + id + "/br.png", false) .setCanGoThrough(false);
 	}
 }
